@@ -35,7 +35,7 @@ def first_build_articles() -> list[dict]:  # 抓取頁面並建立後續功能�
         ),  # 結束 User-Agent 設定。
     }  # 結束請求標頭設定。
     with requests.get(  # 每次呼叫重新抓取；連線或 HTTP 錯誤交由呼叫端處理。
-        url_ppt + salary,
+        url_ppt + c_chat,
         # url_ppt + beauty,  # 拼接看板網址。
         headers=headers,  # 傳入瀏覽器格式的 User-Agent。
         cookies={"over18": "1"},  # 沿用既有年齡確認 Cookie。
@@ -138,7 +138,7 @@ class crawler(commands.Cog):  # 保留既有 Cog 名稱，供擴充模組載入�
                 min_push = 20  # 設定熱門文章門檻。
             case "爆文":
                 min_push = 99  # 爆文代表值為一百，因此使用九十九作門檻。
-            case feature.isdecimal():
+            case _ if feature.isdecimal():
                 min_push = int(feature)  # 將使用者輸入轉成推文門檻。
                 if min_push > 999:  # 避免沒有實際用途的過大數值。
                     await message.channel.send(
@@ -150,24 +150,6 @@ class crawler(commands.Cog):  # 保留既有 Cog 名稱，供擴充模組載入�
                     "無法辨識此功能，請輸入看板功能查看用法。"
                 )  # 提示查詢說明。
                 return  # 未知功能不執行網路請求。
-        # if feature == "最新":  # 取得本頁最新文章。
-        #     min_push = None  # 保留全部有效文章。
-        # elif feature == "熱門":  # 取得推文數大於二十的文章。
-        #     min_push = 20  # 設定熱門文章門檻。
-        # elif feature == "爆文":  # 取得頁面顯示為爆的文章。
-        #     min_push = 99  # 爆文代表值為一百，因此使用九十九作門檻。
-        # elif feature.isdecimal():  # 支援看板20、看板50等無符號數字功能。
-        #     min_push = int(feature)  # 將使用者輸入轉成推文門檻。
-        #     if min_push > 999:  # 避免沒有實際用途的過大數值。
-        #         await message.channel.send(
-        #             "推文門檻請設定在0到999之間。"
-        #         )  # 提示有效範圍。
-        #         return  # 無效門檻不執行網路請求。
-        # else:  # 無法辨識的連續文字功能。
-        #     await message.channel.send(
-        #         "無法辨識此功能，請輸入看板功能查看用法。"
-        #     )  # 提示查詢說明。
-        #     return  # 未知功能不執行網路請求。
         try:  # 將網路失敗轉成使用者看得懂的訊息。
             articles = await fetch_articles(
                 min_push=min_push
