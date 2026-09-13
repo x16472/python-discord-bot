@@ -1,10 +1,12 @@
-:: 關閉指令回顯，保留程式輸出。
 @echo off
 chcp 65001 >nul
+
+cd /d "%~dp0"
+
+set PYTHON=.venv\Scripts\python.exe
 set GIT=
+set VENV_DIR=
 
-:: 變數值本身就包著雙引號
-set "VENV_PYTHON="%~dp0venv\Scripts\python.exe""
+"%PYTHON%" main.py %*
 
-:: 執行時直接呼叫變數（變數外面不要加引號）
-%VENV_PYTHON% "%~dp0main.py" %*
+pause

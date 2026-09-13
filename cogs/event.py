@@ -1,3 +1,5 @@
+import time
+
 import discord
 import requests  # 捕捉爬蟲連線錯誤。
 from discord.ext import commands
@@ -68,6 +70,14 @@ class Main(commands.Cog):
                 for article in articles[:5]:  # 最多回覆五篇。
                     await message.channel.send(article["href"])
                     # 使用回傳變數傳送文章網址。
+            case "現在時間":
+                local_time = time.localtime()
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
+                await message.channel.send(
+                    f"現在時間：{current_time}。\r\n"
+                    "-# 這是我這裡的時間，不是你那邊的時間• "
+                    "[了解更多](<https://support.discord.com/hc/zh-tw/>)"
+                )
             case _:
                 # 相當於 else，如果沒有匹配的字串就什麼都不做
                 pass

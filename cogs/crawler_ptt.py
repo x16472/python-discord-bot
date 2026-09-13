@@ -35,7 +35,7 @@ def first_build_articles() -> list[dict]:  # 抓取頁面並建立後續功能�
         ),  # 結束 User-Agent 設定。
     }  # 結束請求標頭設定。
     with requests.get(  # 每次呼叫重新抓取；連線或 HTTP 錯誤交由呼叫端處理。
-        url_ppt + sex,  # 拼接看板網址。
+        url_ppt + c_chat,  # 拼接看板網址。
         headers=headers,  # 傳入瀏覽器格式的 User-Agent。
         cookies={"over18": "1"},  # 沿用既有年齡確認 Cookie。
         timeout=(5, 15),  # 分別設定連線與讀取等待秒數，並非整次請求的總時限。
