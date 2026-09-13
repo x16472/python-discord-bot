@@ -1,3 +1,4 @@
+import platform
 import time
 
 import discord
@@ -77,6 +78,22 @@ class Main(commands.Cog):
                     f"現在時間：{current_time}。\r\n"
                     "-# 這是我這裡的時間，不是你那邊的時間• "
                     "[了解更多](<https://support.discord.com/hc/zh-tw/>)"
+                )
+            case "系統版本":
+                # 讀取作業系統名稱與詳細版本
+                os_info = f"{platform.system()} {platform.release()}"
+                await message.channel.send(
+                    f"目前運行系統：**{os_info}**。\r\n"
+                    "-# 這是機器人主機的作業系統資訊 • "
+                    "[系統說明](<https://support.discord.com/hc/zh-tw/>)"
+                )
+            case "Python":
+                # 讀取作業系統名稱與詳細版本
+                py_version = platform.python_version()
+                await message.channel.send(
+                    f"Python 執行版本：**{py_version}**。\r\n"
+                    "-# 這是當前環境編譯器的版本 • "
+                    "[核心說明](<https://support.discord.com/hc/zh-tw/>)"
                 )
             case _:
                 # 相當於 else，如果沒有匹配的字串就什麼都不做
