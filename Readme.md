@@ -9,8 +9,8 @@
 | 路徑 | 用途 |
 | --- | --- |
 | `main.py` | 讀取 Token、建立機器人、載入 Cogs，並提供模組管理指令。 |
-| `start.bat` | Windows 批次檔，直接使用專案內 `venv\Scripts\python.exe` 執行根目錄的 `main.py`，並傳遞所有參數。 |
-| `cogs/event.py` | 處理 `$Hello`、固定文字互動與基本「看板」查詢。 |
+| `start.bat` | 設定終端機 UTF-8 代碼頁、切換至專案根目錄，使用 `.venv` 的 Python 啟動程式，結束後暫停視窗。 |
+| `cogs/event.py` | 處理 `$Hello`、固定文字互動、主機時間與基本「看板」查詢。 |
 | `cogs/crawler_ptt.py` | 抓取及解析 PTT 文章，提供看板延伸查詢與訊息格式化。 |
 | `cogs/stats.py` | 連線完成時設定上線狀態與「正在玩 Python」活動。 |
 | `.env` | 本機 Token 設定，需自行準備；已列入 `.gitignore`。 |
@@ -33,17 +33,17 @@
 
 ### 1. 準備 Python 環境
 
-使用 Visual Studio Code 開啟專案資料夾，在專案根目錄開啟 PowerShell。下列新環境步驟使用 `venv`，與 `start.bat` 的路徑一致；若已有可用的同名環境，略過建立步驟。
+使用 Visual Studio Code 開啟專案資料夾，在專案根目錄開啟 PowerShell。下列新環境步驟使用 `.venv`，與目前 `start.bat` 及 `.gitignore` 的設定一致；若已有可用的同名環境，略過建立步驟。
 
 ```powershell
 python --version # 確認 Python 版本至少為 3.10。
-python -m venv venv # 建立與批次檔路徑一致的虛擬環境。
-.\venv\Scripts\python.exe -m pip install "discord.py>=2,<3" python-dotenv requests beautifulsoup4 # 安裝程式匯入的套件。
+python -m venv .venv # 建立與批次檔路徑一致的虛擬環境。
+.\.venv\Scripts\python.exe -m pip install "discord.py>=2,<3" python-dotenv requests beautifulsoup4 # 安裝程式匯入的套件。
 ```
 
-在 Visual Studio Code 的 `Python: Select Interpreter` 選擇 `venv\Scripts\python.exe`，讓編輯器使用相同環境。以下啟動指令直接指定虛擬環境的 Python，不需先執行啟用腳本。
+在 Visual Studio Code 的 `Python: Select Interpreter` 選擇 `.venv\Scripts\python.exe`，讓編輯器使用相同環境。以下啟動指令直接指定虛擬環境的 Python，不需先執行啟用腳本。
 
-`venv` 與 `.venv` 是不同資料夾。若現有環境名為 `.venv`，可從專案根目錄直接使用 `.\.venv\Scripts\python.exe main.py` 啟動；目前批次檔不會自動改用 `.venv`，也不會建立環境或安裝套件。
+啟動腳本固定使用 `.venv\Scripts\python.exe`，不會自動建立環境或安裝套件。請先完成環境準備。
 
 ### 2. 設定 Discord 機器人
 
@@ -66,12 +66,23 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 在專案根目錄執行：
 
 ```powershell
-.\start.bat # 使用專案 venv 內的 Python 啟動機器人。
+.\start.bat # 使用專案 .venv 內的 Python 啟動機器人。
 ```
 
-`start.bat` 以 `%~dp0` 取得批次檔所在的資料夾，直接呼叫 `venv\Scripts\python.exe` 與根目錄的 `main.py` 完整路徑，並透過 `%*` 傳遞所有參數。執行時的兩個路徑均使用引號包住，可處理路徑中的空白；不需切換至虛擬環境資料夾或先執行啟用腳本。
+目前 `start.bat` 的執行流程如下：
 
-登入成功時，終端機會顯示目前登入身分，狀態模組也會輸出連線訊息。可在執行中的終端機按 `Ctrl+C` 停止。
+1. 執行 `chcp 65001 >nul`，將終端機代碼頁設為 UTF-8。
+2. 執行 `cd /d "%~dp0"`，切換磁碟機與工作目錄至批次檔所在的專案根目錄。
+3. 將 `PYTHON` 設為 `.venv\Scripts\python.exe`，以 `"%PYTHON%" main.py %*` 啟動程式並傳遞所有參數。
+4. Python 程式結束後執行 `pause`，等待按鍵，方便查看終端機輸出。
+
+不需先執行虛擬環境的啟用腳本。若不需要批次檔的暫停行為，也可從專案根目錄直接執行：
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+```
+
+登入成功時，終端機會顯示目前登入身分，狀態模組也會輸出連線訊息。可在執行中的終端機按 `Ctrl+C` 中止程式；若批次檔接著顯示暫停或中止確認提示，依畫面提示操作。
 
 ## 使用方式
 
@@ -83,8 +94,9 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 | `嗨` | 回覆問候文字與說明連結。 |
 | `地震` | 回覆預設的玩笑文字，並非即時地震資訊。 |
 | `娜塔莉` | 回覆預設角色介紹。 |
+| `現在時間` | 回覆機器人執行主機的本地時間，格式為 `YYYY-MM-DD HH:MM:SS`。 |
 
-文字互動採完整字串比對，需直接傳送表格中的文字；前後增加空白或其他內容不會符合相同條件。
+上述無前綴的文字互動採完整字串比對，前後增加空白或其他內容不會符合相同條件。「現在時間」使用主機的 `time.localtime()`，不會依 Discord 使用者所在地轉換時區，也未在程式內固定為台灣時間。
 
 ### PTT 看板查詢
 
@@ -106,7 +118,7 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 
 ### 看板來源與資料規則
 
-- 實際請求固定為 PTT Sex 板的 `/bbs/Sex/index.html`，內容可能涉及成人主題。程式雖定義其他看板路徑，目前未提供透過訊息切換看板的功能。
+- 實際請求固定為 PTT C_Chat 板的 `/bbs/C_Chat/index.html`，涵蓋動漫、遊戲與二次元綜合討論。程式雖定義其他看板路徑，目前未提供透過訊息切換看板的功能。
 - 每次查詢重新抓取單一索引頁，不讀取文章內文、不翻頁，也沒有定時推播或快取。
 - 文章依索引頁擷取順序反轉後回傳，並非依推文數排序；置底文章可能影響結果順序，因此「最新」不保證嚴格依發文時間排序。
 - 缺少文章連結的項目會略過。日期保留頁面文字，不補上年份；格式化回覆中缺少的作者或日期顯示為「未知」。
@@ -116,7 +128,7 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 
 ## 模組管理
 
-`main.py` 統一透過 `main()` 中的 `await load_extensions()` 掃描 `cogs` 目錄下的 `.py` 檔案，等待各模組載入，並交由非同步 `setup(bot)` 註冊 Cog。頂層不再執行未等待的載入呼叫，符合 [discord.py 非同步擴充模組介面](https://discordpy.readthedocs.io/en/stable/migrating.html#extension-and-cog-loading-unloading-is-now-asynchronous)。
+`main.py` 透過 `main()` 中的 `await load_extensions()` 掃描 `cogs` 目錄下的 `.py` 檔案，逐一等待模組載入，並交由非同步 `setup(bot)` 註冊 Cog。相關介面可參考 [discord.py 非同步擴充模組說明](https://discordpy.readthedocs.io/en/stable/migrating.html#extension-and-cog-loading-unloading-is-now-asynchronous)。
 
 | 指令範例 | 用途 |
 | --- | --- |
@@ -134,7 +146,8 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 | --- | --- |
 | 顯示找不到環境變數 `DCToken`。 | 確認 `.env` 或執行環境有設定同名變數，且值不為空。 |
 | 出現 `ModuleNotFoundError`。 | 確認安裝套件與啟動時使用相同的 Python；`bs4` 對應的安裝套件名稱為 `beautifulsoup4`。 |
-| 以 `start.bat` 啟動時找不到 Python、套件或 `main.py`。 | 確認批次檔旁有 `venv\Scripts\python.exe` 與 `main.py`，且套件已安裝於該環境；若只有 `.venv`，可改用上方的直接啟動方式。 |
+| 以 `start.bat` 啟動時找不到 Python、套件或 `main.py`。 | 確認專案根目錄有 `.venv\Scripts\python.exe` 與 `main.py`，且套件已安裝於該虛擬環境。 |
+| 「現在時間」與自己的時間不同。 | 回覆採用機器人執行主機的本地時間，請確認主機的時區設定。 |
 | 無法連線並出現特權 Intent 相關錯誤。 | 檢查 Developer Portal 中允許的 Intents 是否符合程式設定。 |
 | 機器人上線但沒有回覆。 | 檢查頻道權限、Message Content Intent、輸入格式，以及對應 Cog 是否載入。 |
 | 查詢文章不足五篇或沒有結果。 | 僅搜尋單一索引頁，符合門檻的有效文章可能不足五篇；可使用 `看板最新` 比較。 |
@@ -145,8 +158,7 @@ DCToken=請替換為你的Discord機器人Token # 設定機器人登入憑證，
 以下項目來自原始碼閱讀，尚未實作：
 
 1. 限制模組管理權限：為 `$load`、`$unload` 與 `$reload` 加上擁有者或適當權限檢查，並補上模組不存在、重複載入與載入失敗的回覆。
-2. 統一虛擬環境命名與忽略規則：批次檔指定 `venv`，現有 `.gitignore` 則排除 `.venv/`，尚未排除 `venv/`。若採用 `venv`，建議同步調整忽略規則，避免將虛擬環境加入版本控制。
-3. 縮小 Intents 範圍：評估功能真正需要的事件，取代目前的 `discord.Intents.all()`，減少不必要的特權設定。
-4. 管理查詢設定與頻率：將固定看板及門檻移至設定，視需求加入冷卻時間或快取。目前每次查詢都會重新連線至 PTT。
-5. 統一訊息來源判斷：`event.py` 僅忽略本機器人的訊息，`crawler_ptt.py` 則忽略所有機器人；建議統一規則以降低互相觸發的機會。
-6. 記錄套件版本與驗證結果：建立可重現的依賴清單，並驗證登入、指令、查詢及狀態呈現。`stats.py` 雖設定活動細節、時間戳記與圖片資產欄位，實際 Discord 顯示效果仍需確認。
+2. 縮小 Intents 範圍：評估功能真正需要的事件，取代目前的 `discord.Intents.all()`，減少不必要的特權設定。
+3. 管理查詢設定與頻率：將固定看板及門檻移至設定，視需求加入冷卻時間或快取。目前每次查詢都會重新連線至 PTT。
+4. 統一訊息來源判斷：`event.py` 僅忽略本機器人的訊息，`crawler_ptt.py` 則忽略所有機器人；建議統一規則以降低互相觸發的機會。
+5. 記錄套件版本與驗證結果：建立可重現的依賴清單，並驗證登入、指令、查詢及狀態呈現。`stats.py` 雖設定活動細節、時間戳記與圖片資產欄位，實際 Discord 顯示效果仍需確認。
