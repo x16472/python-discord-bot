@@ -7,6 +7,7 @@
 .env
 
 # Python Tools for Visual Studio (PTVS)
+.venv/
 __pycache__/
 cogs/__pycache__/
 *.pyc
