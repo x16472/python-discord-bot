@@ -2,7 +2,7 @@ import discord
 import requests  # 捕捉爬蟲連線錯誤。
 from discord.ext import commands
 
-from cogs.crawler import fetch_articles  # 匯入非同步爬蟲。
+from cogs.crawler_ptt import fetch_articles  # 匯入非同步爬蟲。
 
 
 class Main(commands.Cog):
