@@ -10,10 +10,7 @@ token = os.getenv("DCToken")
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="$", intents=intents)
 cogs_dir = os.path.join(os.path.dirname(__file__), "cogs")
-for filename in os.listdir(cogs_dir):
-    if filename.endswith(".py"):
-        bot.load_extension(f"cogs.{filename[:-3]}")
-        # 載入 cogs 資料夾下的所有 .py 檔案
+# 模組統一由load_extensions()非同步載入。
 
 
 @bot.event
