@@ -1,5 +1,8 @@
 import discord
+import requests  # 捕捉爬蟲連線錯誤。
 from discord.ext import commands
+
+from cogs.crawler import fetch_articles  # 匯入非同步爬蟲。
 
 
 class Main(commands.Cog):
@@ -51,6 +54,20 @@ class Main(commands.Cog):
                     "[了解更多]"
                     "(<https://home.gamer.com.tw/artwork.php?sn=5935683>)"
                 )
+            case "看板":  # 收到指定訊息時觸發爬蟲。
+                try:  # 處理抓取失敗。
+                    articles = await fetch_articles(min_push=20)  # 取得符合門檻的文章。
+                except requests.RequestException:  # 捕捉連線與 HTTP 錯誤。
+                    await message.channel.send("抓取失敗，請稍後再試。")  # 提示失敗。
+                    return  # 結束本次事件。
+                if not articles:  # 處理沒有符合條件的文章。
+                    await message.channel.send(
+                        "目前沒有符合條件的文章。"
+                    )  # 提示空結果。
+                    return  # 結束本次事件。
+                for article in articles[:5]:  # 最多回覆五篇。
+                    await message.channel.send(article["href"])
+                    # 使用回傳變數傳送文章網址。
             case _:
                 # 相當於 else，如果沒有匹配的字串就什麼都不做
                 pass
