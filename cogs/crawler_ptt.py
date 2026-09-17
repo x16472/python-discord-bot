@@ -69,7 +69,8 @@ def first_build_articles() -> list[dict]:  # 抓取頁面並建立後續功能�
                 # 頁面日期，不推測年份。
                 "author": author.get_text(strip=True) if author else "",
                 # 作者帳號。
-                "href": urljoin(url_ppt, anchor["href"]),  # 可直接開啟的完整文章網址。
+                "href": urljoin(str(url_ppt), str(anchor["href"])),
+                # 可直接開啟的完整文章網址。
                 "push_num": push_num,  # 用於比較與運算的整數代表值。
                 "push_text": push_text,  # 原始推文標記，供使用者辨識爆文或負評。
             }

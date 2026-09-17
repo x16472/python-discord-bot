@@ -79,7 +79,7 @@ class Main(commands.Cog):
                     "\r\n"
                     "-# 角色介紹•\t"
                     "[了解更多]"
-                    "(<https://home.gamer.com.tw/artwork.php?sn=62527113>)"
+                    "(<https://home.gamer.com.tw/artwork.php?sn=6252711>)"
                 )
             case "看板":  # 收到指定訊息時觸發爬蟲。
                 try:  # 處理抓取失敗。
