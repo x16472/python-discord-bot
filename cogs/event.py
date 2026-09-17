@@ -93,7 +93,7 @@ class Main(commands.Cog):
                 await message.channel.send(
                     f"Python 執行版本：**{py_version}**。\r\n"
                     "-# 這是當前環境編譯器的版本 • "
-                    "[核心說明](<https://support.discord.com/hc/zh-tw/>)"
+                    "[了解更多](<https://www.python.org/>)"
                 )
             case _:
                 # 相當於 else，如果沒有匹配的字串就什麼都不做
