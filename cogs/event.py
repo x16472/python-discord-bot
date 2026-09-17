@@ -50,12 +50,36 @@ class Main(commands.Cog):
 * **實際年齡**：700歲
 * **體型**：172 cm / 53 kg
 
-*「今夜的陰影很美，要來聊聊……嗎？」*
+*「今夜的月色很美，要來聊聊……嗎？」*
                     """
                     "\r\n"
-                    "-# By Grok•\t"
+                    "-# 角色介紹•\t"
                     "[了解更多]"
                     "(<https://home.gamer.com.tw/artwork.php?sn=5935683>)"
+                )
+            case "艾莉西亞":
+                await message.channel.send(
+                    ":exclamation:"
+                    """
+# :female_sign: Alicia D Osborne
+「玩家轉生白骨不死族，留著一頭金髮的美少女 :girl:。」
+* 吟遊詩人 :notes: / 冒險者小隊隊員 :grinning:
+* 尋找騎士戰友（ 亞瑟 ）中 :crossed_swords:。
+* 極度討厭骷髏歧視，來一個開唱一個 :microphone: 。
+
+**關於我．Profile**
+* **全名**：艾莉西亞·戴亞娜·奧斯本（ Alicia Diana Osborne ）
+* **本名**：林妍希
+* **種族**：:skull: 骷髏（人類靈魂）100%（ 不死者 ）
+* **外表**：外表約22歲，柔亮波浪金髮，配戴千面之面（擬態）
+* **體型**：172 cm / 53 kg
+
+「今夜的樂曲很美，要來聽聽……嗎？」
+                    """
+                    "\r\n"
+                    "-# 角色介紹•\t"
+                    "[了解更多]"
+                    "(<https://home.gamer.com.tw/artwork.php?sn=62527113>)"
                 )
             case "看板":  # 收到指定訊息時觸發爬蟲。
                 try:  # 處理抓取失敗。
@@ -76,7 +100,7 @@ class Main(commands.Cog):
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
                 await message.channel.send(
                     f"現在時間：{current_time}。\r\n"
-                    "-# 這是我這裡的時間，不是你那邊的時間• "
+                    "-# 是我這裡的時間，不是你那邊的時間• "
                     "[了解更多](<https://support.discord.com/hc/zh-tw/>)"
                 )
             case "系統版本":
