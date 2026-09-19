@@ -24,7 +24,7 @@ class Main(commands.Cog):
         match message.content:
             case "嗨":
                 await message.channel.send(
-                    "早安您好\r\n-# 今天過得好嗎?　"
+                    "早安您好\r\n-# 今天過得好嗎?"
                     "[了解更多](<https://support.discord.com/hc/zh-tw/>)"
                 )
             case "地震":
@@ -95,6 +95,12 @@ class Main(commands.Cog):
                 for article in articles[:5]:  # 最多回覆五篇。
                     await message.channel.send(article["href"])
                     # 使用回傳變數傳送文章網址。
+            case "錫蘭":
+                await message.channel.send(
+                    ":joy:錫蘭:man_technologist: 要記得:index_pointing_at_the_viewer: :person_gesturing_ok: 你是紅茶:tea: \r\n"
+                    "-# 斯里蘭卡:flag_lk: 是生:pregnant_woman: 你養:cook: 你的地方:homes:"
+                    "[了解更多](<https://www.mofa.gov.tw/CountryInfo.aspx?CASN=5&n=5&sms=33&s=161>)"
+                )
             case "現在時間":
                 local_time = time.localtime()
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
